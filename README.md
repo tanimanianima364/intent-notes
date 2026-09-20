@@ -79,9 +79,11 @@ covers:
   - core/gate.mjs
   - core/notes.mjs
 supersedes:
-  - 2026-01-31-an-earlier-note-0a1b2c3d
+  - feat/earlier-work/2026-01-31-an-earlier-note-0a1b2c3d
 ---
 ```
+
+A `supersedes` entry names a note by its path under `docs/notes` without `.md`, so a note filed under a branch is spelled with its directory; a bare file name reaches only a note that sits directly in `docs/notes`.
 
 The first `#` heading in the body is the note's title, and it is what the hook shows when naming the note before an edit — so it should say what the change did, not what section follows.
 
