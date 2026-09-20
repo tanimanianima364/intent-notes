@@ -548,3 +548,30 @@ test("a superseding note is named by its real path too", () => {
   );
 });
 
+
+test("same-named notes under two branch directories are superseded one at a time", () => {
+  const repository = createRepository();
+  writeNote(repository, "feature/http/2026-09-20-retry-policy", ["src/http.js"], { title: "HTTP retries" });
+  writeNote(repository, "feature/database/2026-09-20-retry-policy", ["src/db.js"], { title: "DB retries" });
+  writeNote(repository, "feature/http/2026-09-21-retry-policy-v2", ["src/http.js"], {
+    supersedes: ["feature/http/2026-09-20-retry-policy"],
+    title: "HTTP retries, revised"
+  });
+
+  assert.equal(
+    notesCovering(repository, ["src/http.js"])[0].supersededBy,
+    `${NOTES_DIRECTORY}/feature/http/2026-09-21-retry-policy-v2.md`
+  );
+  assert.equal(notesCovering(repository, ["src/db.js"])[0].supersededBy, null);
+});
+
+test("a bare file name reaches only a note that sits directly in docs/notes", () => {
+  const repository = createRepository();
+  writeNote(repository, "feature/http/2026-09-20-retry-policy", ["src/http.js"], { title: "HTTP retries" });
+  writeNote(repository, "2026-09-21-later", ["src/http.js"], {
+    supersedes: ["2026-09-20-retry-policy"],
+    title: "Names the file, not the path"
+  });
+
+  assert.equal(notesCovering(repository, ["src/http.js"])[0].supersededBy, null);
+});

@@ -169,8 +169,11 @@ test("hook_event_name must match a known event exactly", () => {
 test("the instructions describe the two records and ask the user nothing", () => {
   const text = renderInstructions();
   assert.doesNotMatch(text, /\{\{/);
-  assert.match(text, /docstring/i);
+  assert.match(text, /^## Comments$/m, "the record on the code is called a comment");
+  assert.doesNotMatch(text, /docstring/i);
   assert.match(text, new RegExp(NOTES_DIRECTORY));
+  assert.match(text, /docs\/notes\/<branch>\/YYYY-MM-DD-<short-slug>-<8 hex characters>\.md/, "notes are filed under the branch and keep a unique suffix");
+  assert.match(text, /detached/, "a detached HEAD has somewhere to file a note");
   assert.match(text, /^covers:$/m, "the note front matter key notes.mjs reads is spelled out");
   assert.doesNotMatch(text, /transfer question/i);
   assert.doesNotMatch(text, /control action/i);

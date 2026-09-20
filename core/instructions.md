@@ -4,7 +4,7 @@ Work normally as a coding agent. The purpose of this plugin is to leave behind w
 
 ## The two records
 
-**Docstrings** say what a file or a function is for and how it works, in the code, always describing the current state. They are the final state of the thing, so they merge like code: when two branches touch one, the answer is whatever the code now does.
+**Comments** say what a file or a function is responsible for — what it was meant to achieve for whoever calls it — in the code, in two or three sentences. They describe the thing as it now stands, so they merge like code: when two branches touch one, the answer is whatever the thing is now for.
 
 **Notes** say what one change was trying to achieve and why the approach was chosen. They are a record of a moment, so they are never rewritten. A note is written once, and a later change that invalidates it writes a new note that supersedes it instead of editing it. Two branches therefore never conflict over a note: each adds its own file.
 
@@ -22,14 +22,11 @@ When `complete` is `false`, part of the change set could not be read: an empty `
 
 If you cannot run it — a sandbox that refuses the command, a session with no one to approve it — do not fall back to a `git diff`. The list the hook injected at the start of this turn is the same set, computed by the same code; say that is what you are working from and carry on.
 
-## Docstrings
+## Comments
 
-On every file and function you add or meaningfully change, leave a docstring in the language's own convention that covers:
+On every file and function you add or meaningfully change, leave a comment in the language's own convention stating its responsibility: what it was meant to achieve for its caller, not the steps it takes. Two or three sentences at most, for the file and for each function alike. How it works, and why that way rather than another, belong in the note, not here.
 
-- what it is for — the job it does for its caller, not the steps it takes
-- the approach, where there was a choice — why it works this way, what it refuses to do, what it trades away
-
-Do not restate the code. A docstring that says "loops over the entries and returns the total" is worse than none: it costs a reader time and rots the moment the loop changes. If nothing about a function required a decision, its name and signature are the docstring, and adding prose there is padding. Match the density of the surrounding file.
+Do not restate the code. A comment that says "loops over the entries and returns the total" is worse than none: it costs a reader time and rots the moment the loop changes. If the name and signature already say what it is for, adding prose there is padding. Match the density of the surrounding file.
 
 ## Notes
 
@@ -37,7 +34,7 @@ A note is needed when the change touched something a reader would have to recons
 
 A path with no note stays listed in the reminder. That is expected for mechanical work and is not a reason to write a note that says nothing.
 
-Write a note as `docs/notes/YYYY-MM-DD-<short-slug>-<8 hex characters>.md`. The hex is only there so two branches writing on the same day never collide; pick it at random.
+Write a note as `docs/notes/<branch>/YYYY-MM-DD-<short-slug>-<8 hex characters>.md`. `<branch>` is what `git branch --show-current` prints, slashes included; when it prints nothing (a detached HEAD), use `detached`. The directory keeps branches apart, the date keeps notes in order because the reader sorts them by file name, and the hex — pick it at random — keeps two notes from ever sharing a name, on one branch or across forks. Keep it short — a few sentences per section, and nothing the diff already shows.
 
 ```markdown
 ---
@@ -45,7 +42,7 @@ covers:
   - path/relative/to/the/repository.ext
   - another/changed/path.ext
 supersedes:
-  - 2026-01-31-an-earlier-note-0a1b2c3d
+  - feat/earlier-work/2026-01-31-an-earlier-note-0a1b2c3d
 ---
 
 # One line naming what this change did
@@ -75,7 +72,7 @@ A note counts only for the change it is part of. A note an earlier branch left a
 
 Within one branch it is the other way round: once a path is covered, the reminder stops naming it even if you go on changing that file. The reminder is a floor, not a ceiling. If later work on this branch takes a covered file somewhere the note does not describe, write another note — nothing will ask you to. The hook still names a path's notes when a tool reads or writes it, so an edit that contradicts one is put in front of you even after the reminder has gone quiet.
 
-`supersedes` is for the reader. List only the notes whose decision no longer holds; leave the key out when there are none. A note that refines an earlier one rather than overturning it supersedes nothing and simply covers the same paths — the hook names a path's notes oldest first, so the two read as the evolution they are. Never edit or delete an existing note to make it agree with new work: the superseded note is the record of what was believed at the time.
+`supersedes` is for the reader. List only the notes whose decision no longer holds; leave the key out when there are none. Name a note by its path under `docs/notes` without `.md` — `feat/earlier-work/2026-01-31-an-earlier-note-0a1b2c3d` — so two branches' notes never share a name; a bare file name reaches only a note that sits directly in `docs/notes`. A note that refines an earlier one rather than overturning it supersedes nothing and simply covers the same paths — the hook names a path's notes oldest first, so the two read as the evolution they are. Never edit or delete an existing note to make it agree with new work: the superseded note is the record of what was believed at the time.
 
 **Before you change a file, look for the notes that cover it and read them** — find them with `grep -rlF -- "<path>" docs/notes` — fixed-string, or a name holding `[`, `.` or `*` is read as a pattern and missed. Do this yourself rather than waiting to be told: the hook names a file's notes when a tool reads or writes it, but a host attaches that context to the tool's result, so a hint on the edit itself reaches you only once the edit has run. A change that contradicts a recorded intent is fine, and is exactly when a new note that supersedes the old one is owed.
 
@@ -85,6 +82,6 @@ At the start of a session and at every user message, the hook derives the branch
 
 A write made through a shell command carries no file path the hook can resolve, so neither of those two arrives for it; the change still appears in the reminder at the next user message.
 
-Nothing enforces any of this. The hook cannot hold the turn, does not warn the user, and has no way to tell whether a docstring was written or whether a note says anything true: the injected reminder is the only notice there is. Never leave a change unrecorded because no one is checking, never move a change somewhere the gate does not look, and never write a note or a docstring whose only purpose is to make the reminder go quiet.
+Nothing enforces any of this. The hook cannot hold the turn, does not warn the user, and has no way to tell whether a comment was written or whether a note says anything true: the injected reminder is the only notice there is. Never leave a change unrecorded because no one is checking, never move a change somewhere the gate does not look, and never write a note or a comment whose only purpose is to make the reminder go quiet.
 
 The hook is a workflow guardrail, not a security sandbox. Continue to obey the host agent's normal permissions and security controls.
