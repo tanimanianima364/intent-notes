@@ -102,7 +102,8 @@ function coveredPaths(root, inChangeSet) {
 
 function readNotes(root) {
   const notes = [];
-  for (const notePath of noteFiles(path.join(root, ...NOTES_DIRECTORY.split("/")))) {
+  const notesRoot = path.join(root, ...NOTES_DIRECTORY.split("/"));
+  for (const notePath of noteFiles(notesRoot)) {
     let bytes;
     try {
       bytes = fs.readFileSync(notePath);
@@ -125,7 +126,7 @@ function readNotes(root) {
     }
     notes.push({
       file: repositoryPath(root, notePath),
-      id: path.basename(notePath, ".md"),
+      id: noteId(notesRoot, notePath),
       covers: parseList(frontMatter.keys, "covers")
         .map(coveredPath)
         .filter(entry => entry !== null),
@@ -134,6 +135,13 @@ function readNotes(root) {
     });
   }
   return notes;
+}
+
+// The name a `supersedes` entry has to spell: the note's path under docs/notes
+// without the extension. Two branches' notes never share one, and a note
+// sitting directly in docs/notes keeps the bare name it always had.
+function noteId(notesRoot, notePath) {
+  return path.relative(notesRoot, notePath).slice(0, -".md".length);
 }
 
 function titleOf(body) {
