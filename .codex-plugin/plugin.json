@@ -1,7 +1,7 @@
 {
   "name": "intent-notes",
-  "version": "0.8.0",
-  "description": "Have the coding agent record what it changed and why — docstrings on the code, an immutable note for any change that is more than mechanical — and name a path's notes as it is read or edited",
+  "version": "0.8.1",
+  "description": "Have the coding agent record what it changed and why — comments on the code, an immutable note for any change that is more than mechanical — and name a path's notes as it is read or edited",
   "author": {
     "name": "Intent Notes contributors"
   },
@@ -9,7 +9,7 @@
   "interface": {
     "displayName": "Intent Notes",
     "shortDescription": "Record why code changed and surface prior change notes",
-    "longDescription": "Intent Notes asks the coding agent to leave docstrings on what it changed and an immutable note on what the change was for -- a purely mechanical change needs none -- derives the branch's change set from git to list the paths no note records yet, and names the notes covering a path, with their titles, as the agent reads or edits it. It never blocks a tool or holds a turn.",
+    "longDescription": "Intent Notes asks the coding agent to leave comments on what it changed and an immutable note on what the change was for -- a purely mechanical change needs none -- derives the branch's change set from git to list the paths no note records yet, and names the notes covering a path, with their titles, as the agent reads or edits it. It never blocks a tool or holds a turn.",
     "developerName": "Intent Notes contributors",
     "category": "Productivity",
     "capabilities": [],

@@ -155,8 +155,8 @@ function changeNotice(input) {
     : " Part of the change set could not be collected, so this list is short of something.";
   return [
     `Intent Notes: no note on this branch records why these paths changed: ${listPaths(uncovered)}.${short}`,
-    `Write one under ${NOTES_DIRECTORY}/ covering them, and leave the docstrings on what you changed`,
-    "saying what each file and function is for and why it works the way it does.",
+    `Write one under ${NOTES_DIRECTORY}/ covering them, and leave the comments on what you changed`,
+    "stating what each file and function is responsible for, in two or three sentences.",
     "A purely mechanical change needs no note and can stay listed here.",
     "Nothing holds the turn and the user is shown no warning, so this reminder is the only notice you get."
   ].join(" ");
