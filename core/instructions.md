@@ -34,7 +34,7 @@ A note is needed when the change touched something a reader would have to recons
 
 A path with no note stays listed in the reminder. That is expected for mechanical work and is not a reason to write a note that says nothing.
 
-Write a note as `docs/notes/<branch>/YYYY-MM-DD-<short-slug>.md`, with `<branch>` spelled exactly as git names the branch, slashes included. The directory keeps branches apart; the date keeps notes in order, because the reader sorts them by file name. Keep it short — a few sentences per section, and nothing the diff already shows.
+Write a note as `docs/notes/<branch>/YYYY-MM-DD-<short-slug>-<8 hex characters>.md`. `<branch>` is what `git branch --show-current` prints, slashes included; when it prints nothing (a detached HEAD), use `detached`. The directory keeps branches apart, the date keeps notes in order because the reader sorts them by file name, and the hex — pick it at random — keeps two notes from ever sharing a name, on one branch or across forks. Keep it short — a few sentences per section, and nothing the diff already shows.
 
 ```markdown
 ---
@@ -42,7 +42,7 @@ covers:
   - path/relative/to/the/repository.ext
   - another/changed/path.ext
 supersedes:
-  - feat/earlier-work/2026-01-31-an-earlier-note
+  - feat/earlier-work/2026-01-31-an-earlier-note-0a1b2c3d
 ---
 
 # One line naming what this change did
@@ -72,7 +72,7 @@ A note counts only for the change it is part of. A note an earlier branch left a
 
 Within one branch it is the other way round: once a path is covered, the reminder stops naming it even if you go on changing that file. The reminder is a floor, not a ceiling. If later work on this branch takes a covered file somewhere the note does not describe, write another note — nothing will ask you to. The hook still names a path's notes when a tool reads or writes it, so an edit that contradicts one is put in front of you even after the reminder has gone quiet.
 
-`supersedes` is for the reader. List only the notes whose decision no longer holds; leave the key out when there are none. Name a note by its path under `docs/notes` without `.md` — `feat/earlier-work/2026-01-31-an-earlier-note` — so two branches' notes never share a name; a bare file name reaches only a note that sits directly in `docs/notes`. A note that refines an earlier one rather than overturning it supersedes nothing and simply covers the same paths — the hook names a path's notes oldest first, so the two read as the evolution they are. Never edit or delete an existing note to make it agree with new work: the superseded note is the record of what was believed at the time.
+`supersedes` is for the reader. List only the notes whose decision no longer holds; leave the key out when there are none. Name a note by its path under `docs/notes` without `.md` — `feat/earlier-work/2026-01-31-an-earlier-note-0a1b2c3d` — so two branches' notes never share a name; a bare file name reaches only a note that sits directly in `docs/notes`. A note that refines an earlier one rather than overturning it supersedes nothing and simply covers the same paths — the hook names a path's notes oldest first, so the two read as the evolution they are. Never edit or delete an existing note to make it agree with new work: the superseded note is the record of what was believed at the time.
 
 **Before you change a file, look for the notes that cover it and read them** — find them with `grep -rlF -- "<path>" docs/notes` — fixed-string, or a name holding `[`, `.` or `*` is read as a pattern and missed. Do this yourself rather than waiting to be told: the hook names a file's notes when a tool reads or writes it, but a host attaches that context to the tool's result, so a hint on the edit itself reaches you only once the edit has run. A change that contradicts a recorded intent is fine, and is exactly when a new note that supersedes the old one is owed.
 
